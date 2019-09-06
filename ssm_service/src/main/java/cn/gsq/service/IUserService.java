@@ -1,5 +1,6 @@
 package cn.gsq.service;
 
+import cn.gsq.domain.Role;
 import cn.gsq.domain.UserInfo;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -12,4 +13,8 @@ public interface IUserService extends UserDetailsService {
     void save(UserInfo userInfo);
 
     UserInfo findById(String id);
+
+    List<Role> findOtherRole(String id);
+
+    void addRoleToUser(String id, String[] ids);
 }

@@ -1,10 +1,8 @@
 package cn.gsq.dao;
 
+import cn.gsq.domain.Permission;
 import cn.gsq.domain.Role;
-import org.apache.ibatis.annotations.Many;
-import org.apache.ibatis.annotations.Result;
-import org.apache.ibatis.annotations.Results;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -22,4 +20,19 @@ public interface IRoleDao {
             @Result(column="id",property="permissions",javaType=List.class,many=@Many(select="cn.gsq.dao.IPermissionDao.findByRoleId"))
     })
     public List<Role> findRoleByUserId(String id);
+
+    @Select("select * from ROLE")
+    List<Role> findAll();
+
+    @Insert("insert into ROLE (rolename, roledesc) VALUES (#{roleName},#{roleDesc})")
+    void save(Role role);
+
+    @Select("select * from PERMISSION where ID not in (select PERMISSIONID from ROLE_PERMISSION where ROLEID=#{id})")
+    List<Permission> findRoleByIdAndAllPermission(String id);
+
+    @Select("select * from role where id=#{id}")
+    Role findById(String id);
+
+    @Insert("insert into ROLE_PERMISSION(ROLEID, PERMISSIONID) values (#{id},#{pid})")
+    void addPermissionToRole(@Param("id") String id, @Param("pid") String pid);
 }
